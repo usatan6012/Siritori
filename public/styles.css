@@ -1,0 +1,13 @@
+h1 {
+  text-align: center;
+}
+
+body {
+	/*background-color: #9999ff;*/
+	/*height: 720px; /*背景画像は高さを持たないため、heightの指定が必要*/
+	/*width: 1280px; */
+	background-image: url(Back.png);/*相対パスで画像ファイルを指定*/
+	background-size: cover; /* 画像のサイズ指定 */
+	background-repeat: no-repeat;/*画像が繰り返すのを防ぐ*/
+	/*background: skyblue;*/
+}
