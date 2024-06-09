@@ -10,13 +10,19 @@
 
 <!-- bodyタグの中には実際に表示するものなどを書く -->
 <body>
-  <h1>しりとり</h1>
-  <!-- 現在の単語を表示する場所 -->
-  <p id="previousWord"></p>
+  <div class="font_test">
+    <h1>しりとり</h1>
+    <p>上の欄にひらがなで「ふりがな」を入力してください。(これでしりとりの先頭文字と末尾文字のチェックをします。)<br>
+      下の欄は「元の単語」を書いてください。(リセットするまで二度と同じ単語は使えません)</p>
+      <!-- 現在の単語を表示する場所 -->
+    <p id="previousWord"></p>
+  </div>
   
   
   <!-- 次の文字を入力するフォーム -->
-  <input class="text" id="nextWordInput" type="text" />
+  <input class="text" id="nextWordInput" type="text" /><br>
+  <!--　<br>は改行を意味する。-->
+  <input class="text2" id="nextWordInput2" type="text" />
   <button id="nextWordSendButton">送信</button>
   <button id="ResetButton">リセット</button>
   
@@ -32,40 +38,18 @@
       const paragraph = document.querySelector("#previousWord");
       // 取得したタグの中身を書き換える
       paragraph.innerHTML = `前の単語: ${previousWord}`;
+
+      // inputタグを取得
+      const nextWordInput = document.querySelector("#nextWordInput");
+      const nextWordInput2 = document.querySelector("#nextWordInput2");
+      // inputタグの中身を消去する
+      nextWordInput.value = "";
+      nextWordInput2.value = "";
     }
     
     // 送信ボタンの押下時に実行
     document.querySelector("#nextWordSendButton").onclick = async(event) => {
-      // inputタグを取得
-      const nextWordInput = document.querySelector("#nextWordInput");
-      // inputの中身を取得
-      const nextWordInputText = nextWordInput.value;
-      // POST /shiritoriを実行
-      // 次の単語をresponseに格納
-      const response = await fetch(
-        "/shiritori",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nextWord: nextWordInputText })
-        }
-      );
-      
-      // status: 200以外が返ってきた場合にエラーを表示
-      if (response.status !== 200) {
-        const errorJson = await response.text();
-        const errorObj = JSON.parse(errorJson);
-        alert(errorObj["errorMessage"]);
-      }
-
-      const previousWord = await response.text();
-
-      // id: previousWordのタグを取得
-      const paragraph = document.querySelector("#previousWord");
-      // 取得したタグの中身を書き換える
-      paragraph.innerHTML = `前の単語: ${previousWord}`;
-      // inputタグの中身を消去する
-      nextWordInput.value = "";
+      SendWord();
     }
     
     // リセットボタンの押下時に実行
@@ -88,16 +72,72 @@
       paragraph.innerHTML = `前の単語: ${previousWord}`;
       // inputタグの中身を消去する
       nextWordInput.value = "";
+      nextWordInput2.value = "";
     }
     
-   const text = document.querySelector(".text");
+    const text = document.querySelector(".text");
+    const text2 = document.querySelector(".text2");
+
     text.addEventListener("keydown", (e) =>{
-        const key = e.keyCode;
-        console.log(key);
-        if(key === 13){
-          fetch("/shiritori", { method: "POST" });
-        }
+      //eが13なら実行
+      const key = e.keyCode;
+      //console.log(key);
+      if(key === 13){
+        SendWord();
+      }
     });
+    text2.addEventListener("keydown", (e) =>{
+      //eが13なら実行
+      const key = e.keyCode;
+      //console.log(key);
+      if(key === 13){
+        SendWord();
+      }
+    });
+
+    function SendWord(){
+      //現在入力されている文字を送信
+      TestF(event);
+      async function TestF(event) {
+        // inputタグを取得
+        const nextWordInput = document.querySelector("#nextWordInput");
+        const nextWordInput2 = document.querySelector("#nextWordInput2");
+        // inputの中身を取得
+        const nextWordInputText = nextWordInput.value;
+        const nextWordInputText2 = nextWordInput2.value;
+        // POST /shiritoriを実行
+        // 次の単語をresponseに格納
+        var SendData = {//送るデータをここでまとめる
+          nextWord: nextWordInputText,
+          nextWord2: nextWordInputText2
+        }
+        const response = await fetch(
+          "/shiritori",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(SendData)
+          }
+        );
+    
+        // status: 200以外が返ってきた場合にエラーを表示
+        if (response.status !== 200) {
+          const errorJson = await response.text();
+          const errorObj = JSON.parse(errorJson);
+          alert(errorObj["errorMessage"]);
+        }
+
+        const previousWord = await response.text();
+
+        // id: previousWordのタグを取得
+        const paragraph = document.querySelector("#previousWord");
+        // 取得したタグの中身を書き換える
+        paragraph.innerHTML = `前の単語: ${previousWord}`;
+        // inputタグの中身を消去する
+        nextWordInput.value = "";
+        nextWordInput2.value = "";
+      }
+    }
   </script>
   
 </body>

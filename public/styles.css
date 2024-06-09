@@ -3,7 +3,7 @@ h1 {
 }
 
 body {
-	/*background-color: #9999ff;*/
+	background-color: #1a1a47;
 	/*height: 720px; /*背景画像は高さを持たないため、heightの指定が必要*/
 	/*width: 1280px; */
 	background-image: url(Back.png);/*相対パスで画像ファイルを指定*/
@@ -11,3 +11,8 @@ body {
 	background-repeat: no-repeat;/*画像が繰り返すのを防ぐ*/
 	/*background: skyblue;*/
 }
+.font_test {
+color: #d393a6;
+/*background-color: #d3d3d377;*/
+}
+
