@@ -41,7 +41,7 @@ Deno.serve(async (request) => {
     if (request.method === "POST" && pathname === "/shiritori") {
         // リクエストのペイロードを取得
         const requestJson = await request.json();
-        console.log(requestJson)
+        console.log(requestJson)//取得した文字列をコンソールに出力
         // JSONの中からnextWordを取得
         const nextWord = requestJson["nextWord"];
         const nextWord2 = requestJson["nextWord2"];
@@ -51,6 +51,17 @@ Deno.serve(async (request) => {
         //--------------------//
 
         function LastChar(Word) {
+            const SmallWord = ['ぁ','ぃ','ぅ','ぇ','ぉ','ゕ','ゖ','っ','ゃ','ゅ','ょ','ゎ']
+            const BigWord = ['あ','い','う','え','お','か','け','つ','や','ゆ','よ','わ'];
+            let Index = SmallWord.indexOf(Word[Word.length-1]);
+            if(Index !== -1){
+                //最後の文字が捨て仮名(小さい平仮名)だったら実行
+                //console.log("最後の文字が捨て仮名です " + Index);
+                return BigWord[Index];
+            }
+            if(Word[Word.length-1] === 'ぁ') {
+                return 'あ';
+            }
             if(Word[Word.length-1] === "ー"){
                 return Word[Word.length-2] 
             }
@@ -104,7 +115,6 @@ Deno.serve(async (request) => {
 
         //以前その単語が出ていないか確認
         if(wordHistories.find(value => value === nextWord2) != null){
-            console.log("検出");
             //その単語が以前に出ていれば、ゲームオーバー
             return new Response(
                 JSON.stringify({

@@ -13,8 +13,12 @@
   <div class="font_test">
     <h1>しりとり</h1>
     <p>上の欄にひらがなで「ふりがな」を入力してください。(これでしりとりの先頭文字と末尾文字のチェックをします。)<br>
-      下の欄は「元の単語」を書いてください。(リセットするまで二度と同じ単語は使えません)</p>
-      <!-- 現在の単語を表示する場所 -->
+      下の欄は「元の単語」を書いてください。(リセットするまで二度と同じ単語は使えません)<br>
+      前の単語は「よみがな(元の単語)」の順に表示されます。
+    </p>
+    <!-- しりとりの回数を表示する場所 -->
+    <p id="SiritoriCounts"></p>
+    <!-- 現在の単語を表示する場所 -->
     <p id="previousWord"></p>
   </div>
   
@@ -28,6 +32,7 @@
   
   <!-- JavaScriptを実行 -->
   <script>
+    let SiritoriCount = 1;//しりとりを続けた回数を記録
     //alert("Hello JavaScript!");
     window.onload = async (event) => {
       // GET /shiritoriを実行
@@ -36,8 +41,12 @@
       const previousWord = await response.text();
       // id: previousWordのタグを取得
       const paragraph = document.querySelector("#previousWord");
+      const paragraph2 = document.querySelector("#SiritoriCounts");
       // 取得したタグの中身を書き換える
       paragraph.innerHTML = `前の単語: ${previousWord}`;
+      paragraph2.innerHTML = `「${SiritoriCount}」回続けました。`;
+      //const test = String(iritoriCount);
+      console.log(SiritoriCount)
 
       // inputタグを取得
       const nextWordInput = document.querySelector("#nextWordInput");
@@ -62,14 +71,18 @@
         const errorJson = await response.text();
         const errorObj = JSON.parse(errorJson);
         alert(errorObj["errorMessage"]);
+      }else{
+        SiritoriCount = 1;
       }
 
       const previousWord = await response.text();
 
       // id: previousWordのタグを取得
       const paragraph = document.querySelector("#previousWord");
+      const paragraph2 = document.querySelector("#SiritoriCounts");
       // 取得したタグの中身を書き換える
       paragraph.innerHTML = `前の単語: ${previousWord}`;
+      paragraph2.innerHTML = `「${SiritoriCount}」回続けました。`;
       // inputタグの中身を消去する
       nextWordInput.value = "";
       nextWordInput2.value = "";
@@ -125,14 +138,19 @@
           const errorJson = await response.text();
           const errorObj = JSON.parse(errorJson);
           alert(errorObj["errorMessage"]);
+        }else{
+        //エラーが帰ってこなかったら
+        SiritoriCount += 1;
         }
 
         const previousWord = await response.text();
 
         // id: previousWordのタグを取得
         const paragraph = document.querySelector("#previousWord");
+        const paragraph2 = document.querySelector("#SiritoriCounts");
         // 取得したタグの中身を書き換える
         paragraph.innerHTML = `前の単語: ${previousWord}`;
+        paragraph2.innerHTML = `「${SiritoriCount}」回続けました。`;
         // inputタグの中身を消去する
         nextWordInput.value = "";
         nextWordInput2.value = "";
